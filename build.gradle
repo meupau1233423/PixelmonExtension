@@ -23,7 +23,7 @@ minecraft {
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
-version = '0.0.9'
+version = '1.0.0'
 group = 'me.neovitalism.pixelmonextension'
 
 repositories {
@@ -57,7 +57,7 @@ repositories {
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.16.5-36.2.34'
-    implementation fg.deobf('pixelmon:Pixelmon-1.16.5-9.0.2-server:9.0.2')
+    implementation fg.deobf('pixelmon:Pixelmon-1.16.5-9.0.3-server:9.0.3')
     implementation 'io.izzel.arclight:arclight-api:1.2.7'
     compileOnly 'io.izzel.arclight:arclight-forge-1.16:1.0.23:srg'
     compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
