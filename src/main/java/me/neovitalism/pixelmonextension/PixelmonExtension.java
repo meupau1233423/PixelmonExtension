@@ -440,6 +440,10 @@ public class PixelmonExtension extends PlaceholderExpansion {
                                     Nature mintNature = pokemon.getMintNature();
                                     parsed = (mintNature == null) ? "None" : mintNature.getLocalizedName();
                                 }
+                                if (instructions[3].equals("minted")) { // %pixelmon_party_[1-6]_nature_minted%
+                                    Nature mintNature = pokemon.getMintNature();
+                                    parsed = String.valueOf(mintNature == null);
+                                }
                             }
                             break;
                         case "form": // %pixelmon_party_[1-6]_form…
