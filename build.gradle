@@ -57,7 +57,7 @@ repositories {
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.16.5-36.2.34'
-    implementation fg.deobf('pixelmon:Pixelmon-1.16.5-9.0.3-server:9.0.3')
+    implementation fg.deobf('pixelmon:Pixelmon-1.16.5-9.0.4-server:9.0.4')
     implementation 'io.izzel.arclight:arclight-api:1.2.7'
     compileOnly 'io.izzel.arclight:arclight-forge-1.16:1.0.23:srg'
     compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
