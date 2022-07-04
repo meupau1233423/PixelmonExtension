@@ -4,6 +4,7 @@ import com.pixelmonmod.pixelmon.Pixelmon;
 import com.pixelmonmod.pixelmon.api.config.PixelmonConfigProxy;
 import com.pixelmonmod.pixelmon.api.economy.BankAccount;
 import com.pixelmonmod.pixelmon.api.economy.BankAccountProxy;
+import com.pixelmonmod.pixelmon.api.pokedex.PlayerPokedex;
 import com.pixelmonmod.pixelmon.api.pokemon.EggGroup;
 import com.pixelmonmod.pixelmon.api.pokemon.Element;
 import com.pixelmonmod.pixelmon.api.pokemon.Nature;
@@ -25,6 +26,7 @@ import com.pixelmonmod.pixelmon.api.storage.PlayerPartyStorage;
 import com.pixelmonmod.pixelmon.api.storage.StorageProxy;
 import com.pixelmonmod.pixelmon.spawning.PixelmonSpawning;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
@@ -75,7 +77,7 @@ public class PixelmonExtension extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getVersion() {
-        return "1.0.0";
+        return "1.0.1";
     }
 
     @NotNull
@@ -163,39 +165,35 @@ public class PixelmonExtension extends PlaceholderExpansion {
                     }
                     if(instructions.length >= 4 && instructions[2].equals("percent")) { // %pixelmon_trainer_dex_percent…
                         if(instructions[3].equals("caught")) { // %pixelmon_trainer_dex_percent_caught…
-                            if(length == 4) return String.valueOf((double) playerParty.playerPokedex.countCaught() / Pokedex.pokedexSize); // %pixelmon_trainer_dex_percent_caught%
-                            if(length == 5 && instructions[4].equals("rounded")) return String.format("%.2f",
-                                    (double) playerParty.playerPokedex.countCaught() / Pokedex.pokedexSize); // %pixelmon_trainer_dex_percent_caught_rounded%
-                            if(length == 5 && instructions[4].equals("int")) return String.valueOf(
-                                    playerParty.playerPokedex.countCaught() / Pokedex.pokedexSize); // %pixelmon_trainer_dex_percent_caught_int%
+                            if(length == 4) return dexPercent(playerParty.playerPokedex, 0, false, false, true); // %pixelmon_trainer_dex_percent_caught%
+                            if(length == 5 && instructions[4].equals("rounded")) return
+                                    dexPercent(playerParty.playerPokedex, 0, true, false, true); // %pixelmon_trainer_dex_percent_caught_rounded%
+                            if(length == 5 && instructions[4].equals("int")) return
+                                    dexPercent(playerParty.playerPokedex, 0, false, true, true); // %pixelmon_trainer_dex_percent_caught_int%
                             if(length >= 6 && instructions[4].equals("gen")) {
                                 int generation = getGeneration(instructions[5]);
-                                if(length == 6) return (generation == -1) ? "Invalid Generation." : String.valueOf((double) playerParty.playerPokedex.countCaught(generation)
-                                        / PixelmonSpecies.getGenerationDex(generation).size()); // %pixelmon_trainer_dex_percent_caught_gen_[1-8]%
-                                if(length == 7 && instructions[6].equals("rounded")) return (generation == -1) ? "Invalid Generation." : String.format("%.2f",
-                                        ((double) playerParty.playerPokedex.countCaught(generation) /
-                                                PixelmonSpecies.getGenerationDex(generation).size())); // %pixelmon_trainer_dex_percent_caught_gen_[1-8]_rounded%
+                                if(length == 6) return (generation == -1) ? "Invalid Generation." :
+                                        dexPercent(playerParty.playerPokedex, generation, false, false, true); // %pixelmon_trainer_dex_percent_caught_gen_[1-8]%
+                                if(length == 7 && instructions[6].equals("rounded")) return (generation == -1) ? "Invalid Generation." :
+                                        dexPercent(playerParty.playerPokedex, generation, true, false, true); // %pixelmon_trainer_dex_percent_caught_gen_[1-8]_rounded%
                                 if(length == 7 && instructions[6].equals("int")) return (generation == -1) ? "Invalid Generation." :
-                                        String.valueOf((playerParty.playerPokedex.countCaught(generation) /
-                                                PixelmonSpecies.getGenerationDex(generation).size())); // %pixelmon_trainer_dex_percent_caught_gen_[1-8]_int%
+                                        dexPercent(playerParty.playerPokedex, generation, false, true, true); // %pixelmon_trainer_dex_percent_caught_gen_[1-8]_int%
                             }
                         }
                         if(instructions[3].equals("seen")) { // %pixelmon_trainer_dex_percent_seen…
-                            if(length == 4) return String.valueOf((double) playerParty.playerPokedex.countSeen() / Pokedex.pokedexSize); // %pixelmon_trainer_dex_percent_seen%
-                            if(length == 5 && instructions[4].equals("rounded")) return String.format("%.2f",
-                                    (double) playerParty.playerPokedex.countSeen() / Pokedex.pokedexSize); // %pixelmon_trainer_dex_percent_seen_rounded%
-                            if(length == 5 && instructions[4].equals("int")) return String.valueOf(
-                                    playerParty.playerPokedex.countSeen() / Pokedex.pokedexSize); // %pixelmon_trainer_dex_percent_seen_int%
+                            if(length == 4) return dexPercent(playerParty.playerPokedex, 0, false, false, false); // %pixelmon_trainer_dex_percent_seen%
+                            if(length == 5 && instructions[4].equals("rounded")) return
+                                    dexPercent(playerParty.playerPokedex, 0, true, false, false); // %pixelmon_trainer_dex_percent_seen_rounded%
+                            if(length == 5 && instructions[4].equals("int")) return
+                                    dexPercent(playerParty.playerPokedex, 0, false, true, false); // %pixelmon_trainer_dex_percent_seen_int%
                             if(length >= 6 && instructions[4].equals("gen")) {
                                 int generation = getGeneration(instructions[5]);
-                                if(length == 6) return (generation == -1) ? "Invalid Generation." : String.valueOf((double) playerParty.playerPokedex.countSeen(generation)
-                                        / PixelmonSpecies.getGenerationDex(generation).size()); // %pixelmon_trainer_dex_percent_seen_gen_[1-8]%
-                                if(length == 7 && instructions[6].equals("rounded")) return (generation == -1) ? "Invalid Generation." : String.format("%.2f",
-                                        ((double) playerParty.playerPokedex.countSeen(generation) /
-                                                PixelmonSpecies.getGenerationDex(generation).size())); // %pixelmon_trainer_dex_percent_seen_gen_[1-8]_rounded%
+                                if(length == 6) return (generation == -1) ? "Invalid Generation." :
+                                        dexPercent(playerParty.playerPokedex, generation, false, false, false); // %pixelmon_trainer_dex_percent_seen_gen_[1-8]%
+                                if(length == 7 && instructions[6].equals("rounded")) return (generation == -1) ? "Invalid Generation." :
+                                        dexPercent(playerParty.playerPokedex, generation, true, false, false); // %pixelmon_trainer_dex_percent_seen_gen_[1-8]_rounded%
                                 if(length == 7 && instructions[6].equals("int")) return (generation == -1) ? "Invalid Generation." :
-                                        String.valueOf((playerParty.playerPokedex.countSeen(generation) /
-                                                PixelmonSpecies.getGenerationDex(generation).size())); // %pixelmon_trainer_dex_percent_seen_gen_[1-8]_int%
+                                        dexPercent(playerParty.playerPokedex, generation, false, true, false); // %pixelmon_trainer_dex_percent_seen_gen_[1-8]_int%
                             }
                         }
                     }
@@ -377,9 +375,9 @@ public class PixelmonExtension extends PlaceholderExpansion {
                                             parsed = String.valueOf((int) total); // %pixelmon_party_[1-6]_ev_total%
                                         if (length >= 5 && instructions[4].equals("percent")) {
                                             if (length == 5)
-                                                parsed = String.format("%.2f", (total / 520) * 100); // %pixelmon_party_[1-6]_ev_total_percent%
+                                                parsed = String.format("%.2f", (total / 510) * 100); // %pixelmon_party_[1-6]_ev_total_percent%
                                             if (length == 6 && instructions[5].equals("int"))
-                                                parsed = String.valueOf((int) (Math.floor(total / 520 * 100))); // %pixelmon_party_[1-6]_ev_total_percent_int%
+                                                parsed = String.valueOf((int) (Math.floor(total / 510 * 100))); // %pixelmon_party_[1-6]_ev_total_percent_int%
                                         }
                                         break;
                                 }
@@ -465,7 +463,7 @@ public class PixelmonExtension extends PlaceholderExpansion {
                             if (length == 3) parsed = getHiddenPower(pokemon);
                             break;
                         case "shiny": // %pixelmon_party_[1-6]_shiny%
-                            if (length == 3) parsed = String.valueOf(pokemon.isShiny());
+                            if (length == 3) parsed = String.valueOf(pokemon.getPalette().getName().contains("shiny"));
                             break;
                         case "unbreedable": // %pixelmon_party_[1-6]_unbreedable%
                             if (length == 3) parsed = String.valueOf(pokemon.isUnbreedable());
@@ -874,5 +872,19 @@ public class PixelmonExtension extends PlaceholderExpansion {
         } catch(NumberFormatException e) {
             return -1;
         }
+    }
+
+    private String dexPercent(PlayerPokedex dex, int generation, boolean rounded, boolean isInt, boolean caught) {
+        int outOf = (generation == 0) ? Pokedex.pokedexSize : PixelmonSpecies.getGenerationDex(generation).size();
+        double amount;
+        if(caught) {
+            amount = (generation == 0) ? dex.countCaught() : dex.countCaught(generation);
+        } else {
+            amount = (generation == 0) ? dex.countSeen() : dex.countSeen(generation);
+        }
+        double percent = (amount / outOf) * 100;
+        if(rounded) return String.format("%.2f", percent);
+        if(isInt) return String.valueOf((int) percent);
+        return String.valueOf(percent);
     }
 }
