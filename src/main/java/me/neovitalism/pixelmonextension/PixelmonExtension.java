@@ -5,7 +5,6 @@ import com.pixelmonmod.pixelmon.api.config.PixelmonConfigProxy;
 import com.pixelmonmod.pixelmon.api.economy.BankAccount;
 import com.pixelmonmod.pixelmon.api.economy.BankAccountProxy;
 import com.pixelmonmod.pixelmon.api.pokedex.PlayerPokedex;
-import com.pixelmonmod.pixelmon.api.pokemon.EggGroup;
 import com.pixelmonmod.pixelmon.api.pokemon.Element;
 import com.pixelmonmod.pixelmon.api.pokemon.Nature;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
@@ -26,7 +25,6 @@ import com.pixelmonmod.pixelmon.api.storage.PlayerPartyStorage;
 import com.pixelmonmod.pixelmon.api.storage.StorageProxy;
 import com.pixelmonmod.pixelmon.spawning.PixelmonSpawning;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
@@ -77,7 +75,7 @@ public class PixelmonExtension extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getVersion() {
-        return "1.0.1";
+        return "1.0.2";
     }
 
     @NotNull
@@ -676,9 +674,13 @@ public class PixelmonExtension extends PlaceholderExpansion {
                             if(length == 3) parsed = String.valueOf(species.isLegendary() || species.isUltraBeast() || species.isMythical());
                             break;
                         case "egg":
-                            if(length == 4 && instructions[3].equals("group")) { // %pixelmon_pokedex_[pokemonName,dexNumber]<:formName>_egg_group%
-                                List<EggGroup> eggGroups = stats.getEggGroups();
-                                parsed = (eggGroups.size() == 0) ? "None" : eggGroups.get(0).toString();
+                            if(length >= 4 && instructions[3].equals("groups")) { // %pixelmon_pokedex_[pokemonName,dexNumber]<:formName>_egg_group%
+                                String eggGroups = Arrays.toString(stats.getEggGroups().toArray());
+                                eggGroups = eggGroups.substring(1, eggGroups.length()-1);
+                                String[] groups = eggGroups.split(", ");
+                                if (length == 4) parsed = listFunction(groups, ", ", true); // %pixelmon_party_[1-6]_moves%
+                                if (length >= 5 && instructions[4].contains("s:"))
+                                    parsed = listFunction(groups, instructionsLeft(4, instructions), true); // %pixelmon_party_[1-6]_moves_s:[separator]%
                             }
                             if(length == 5 && instructions[3].equals("steps") && instructions[4].equals("max")) {
                                 // %pixelmon_pokedex_[pokemonName,dexNumber]<:formName>_egg_steps_max%
