@@ -469,10 +469,8 @@ public class PixelmonExtension extends PlaceholderExpansion {
                         case "palette": // %pixelmon_party_[1-6]_palette…
                             if (length == 3)
                                 parsed = pokemon.getPalette().getLocalizedName(); // %pixelmon_party_[1-6]_palette%
-                            if (length == 4 && instructions[3].equals("unlocalized")) {
-                                isParsed = true;
-                                parsed = (pokemon.getPalette().getName().equals("none")) ? "" : pokemon.getPalette().getName();
-                            } // %pixelmon_party_[1-6]_palette_unlocalized%
+                            if (length == 4 && instructions[3].equals("unlocalized"))
+                                parsed = pokemon.getPalette().getName(); // %pixelmon_party_[1-6]_palette_unlocalized%
                             break;
                         case "growth": // %pixelmon_party_[1-6]_growth%
                             if (length == 3) parsed = pokemon.getGrowth().getLocalizedName();
