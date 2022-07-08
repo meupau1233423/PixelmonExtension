@@ -76,7 +76,7 @@ public class PixelmonExtension extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getVersion() {
-        return "1.0.3";
+        return "1.0.4";
     }
 
     @NotNull
@@ -86,6 +86,7 @@ public class PixelmonExtension extends PlaceholderExpansion {
         PlayerPartyStorage playerParty = StorageProxy.getParty(playerUUID);
         params = params.toLowerCase();
         String parsed = "";
+        boolean isParsed = false;
         String[] instructions = params.split("_");
         int length = instructions.length;
         if(!(instructions[0].equals(""))) {
@@ -421,7 +422,7 @@ public class PixelmonExtension extends PlaceholderExpansion {
                             break;
                         case "gender": // %pixelmon_party_[1-6]_gender%
                             if (length == 3) parsed = pokemon.getGender().getLocalizedName();
-                            if (length == 4 && instructions[3].equals("int")) {
+                            if (length == 4 && instructions[3].equals("int")) { // %pixelmon_party_[1-6]_gender_int%
                                 Gender gender = pokemon.getGender();
                                 switch(gender.toString()) {
                                     case "MALE":
@@ -460,14 +461,18 @@ public class PixelmonExtension extends PlaceholderExpansion {
                         case "form": // %pixelmon_party_[1-6]_form…
                             if (length == 3)
                                 parsed = pokemon.getForm().getLocalizedName(); // %pixelmon_party_[1-6]_form%
-                            if (length == 4 && instructions[3].equals("unlocalized"))
-                                parsed = pokemon.getForm().getName(); // %pixelmon_party_[1-6]_form_unlocalized%
+                            if (length == 4 && instructions[3].equals("unlocalized")) {
+                                isParsed = true;
+                                parsed = pokemon.getForm().getName();
+                            } // %pixelmon_party_[1-6]_form_unlocalized%
                             break;
                         case "palette": // %pixelmon_party_[1-6]_palette…
                             if (length == 3)
                                 parsed = pokemon.getPalette().getLocalizedName(); // %pixelmon_party_[1-6]_palette%
-                            if (length == 4 && instructions[3].equals("unlocalized"))
-                                parsed = pokemon.getPalette().getName(); // %pixelmon_party_[1-6]_palette_unlocalized%
+                            if (length == 4 && instructions[3].equals("unlocalized")) {
+                                isParsed = true;
+                                parsed = (pokemon.getPalette().getName().equals("none")) ? "" : pokemon.getPalette().getName();
+                            } // %pixelmon_party_[1-6]_palette_unlocalized%
                             break;
                         case "growth": // %pixelmon_party_[1-6]_growth%
                             if (length == 3) parsed = pokemon.getGrowth().getLocalizedName();
@@ -565,7 +570,7 @@ public class PixelmonExtension extends PlaceholderExpansion {
                             break;
                         // End Party Placeholders
                     }
-                    if(!(parsed.equals(""))) return parsed;
+                    if(!(parsed.equals("")) || isParsed) return parsed;
                 }
                 if (instructions[0].equals("pokedex") || partyExtension) {
                     Species species;
