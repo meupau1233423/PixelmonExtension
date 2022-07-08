@@ -23,7 +23,7 @@ minecraft {
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
-version = '1.0.4'
+version = '1.0.5'
 group = 'me.neovitalism.pixelmonextension'
 
 repositories {
