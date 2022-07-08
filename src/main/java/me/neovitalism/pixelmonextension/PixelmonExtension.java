@@ -13,6 +13,7 @@ import com.pixelmonmod.pixelmon.api.pokemon.species.Pokedex;
 import com.pixelmonmod.pixelmon.api.pokemon.species.Species;
 import com.pixelmonmod.pixelmon.api.pokemon.species.Stats;
 import com.pixelmonmod.pixelmon.api.pokemon.species.evs.EVYields;
+import com.pixelmonmod.pixelmon.api.pokemon.species.gender.Gender;
 import com.pixelmonmod.pixelmon.api.pokemon.species.stat.ImmutableBattleStats;
 import com.pixelmonmod.pixelmon.api.pokemon.stats.BattleStatsType;
 import com.pixelmonmod.pixelmon.api.pokemon.stats.evolution.Evolution;
@@ -75,7 +76,7 @@ public class PixelmonExtension extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getVersion() {
-        return "1.0.2";
+        return "1.0.3";
     }
 
     @NotNull
@@ -420,6 +421,20 @@ public class PixelmonExtension extends PlaceholderExpansion {
                             break;
                         case "gender": // %pixelmon_party_[1-6]_gender%
                             if (length == 3) parsed = pokemon.getGender().getLocalizedName();
+                            if (length == 4 && instructions[3].equals("int")) {
+                                Gender gender = pokemon.getGender();
+                                switch(gender.toString()) {
+                                    case "MALE":
+                                        parsed = "0";
+                                        break;
+                                    case "FEMALE":
+                                        parsed = "1";
+                                        break;
+                                    default:
+                                        parsed = "2";
+                                        break;
+                                }
+                            }
                             break;
                         case "ball": // %pixelmon_party_[1-6]_ball%
                             if (length == 3) parsed = pokemon.getBall().getLocalizedName();
