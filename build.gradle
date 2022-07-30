@@ -22,7 +22,7 @@ minecraft {
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
-version = '1.0.5'
+version = '1.0.6'
 group = 'me.neovitalism.pixelmonextension'
 
 repositories {
@@ -52,7 +52,7 @@ repositories {
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.16.5-36.2.34'
-    implementation fg.deobf('pixelmon:Pixelmon-1.16.5-9.0.4-server:9.0.4')
+    implementation fg.deobf('pixelmon:Pixelmon-1.16.5-9.0.6-server:9.0.6')
     compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
     compileOnly 'org.spigotmc:spigot:1.16.5-R0.1-SNAPSHOT'
     compileOnly 'me.clip:placeholderapi:2.10.10'

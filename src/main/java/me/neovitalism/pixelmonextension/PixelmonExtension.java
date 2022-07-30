@@ -26,7 +26,9 @@ import com.pixelmonmod.pixelmon.api.storage.PlayerPartyStorage;
 import com.pixelmonmod.pixelmon.api.storage.StorageProxy;
 import com.pixelmonmod.pixelmon.spawning.PixelmonSpawning;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -76,7 +78,7 @@ public class PixelmonExtension extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getVersion() {
-        return "1.0.5";
+        return "1.0.6";
     }
 
     @NotNull
@@ -575,7 +577,7 @@ public class PixelmonExtension extends PlaceholderExpansion {
                     String formName;
                     if (partyExtension) {
                         species = pokemon.getSpecies();
-                        formName = (pokemon.isDefaultForm()) ? "None" : pokemon.getForm().getLocalizedName();
+                        formName = (pokemon.isDefaultForm()) ? "None" : pokemon.getForm().getName();
                     } else {
                         species = getSpecies(instructions[1]);
                         if (species == null) return "Invalid Pokemon.";
@@ -587,7 +589,7 @@ public class PixelmonExtension extends PlaceholderExpansion {
                     if(formName.equals("None")) {
                         stats = species.getDefaultForm();
                     } else {
-                        stats = species.getForm(unlocalize(formName));
+                        stats = species.getForm(formName);
                     }
                     switch (instructions[2]) {
                         case "dex":
@@ -879,7 +881,7 @@ public class PixelmonExtension extends PlaceholderExpansion {
             if(optional.isEmpty()) return null;
             Stats stats = optional.get().getForm(data[1]);
             if(stats == null) return null;
-            if(data.length == 2) return stats.getLocalizedName();
+            if(data.length == 2) return stats.getName();
         }
         return "";
     }
