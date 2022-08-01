@@ -237,12 +237,12 @@ public class PixelmonExtension extends PlaceholderExpansion {
                     int partySlot;
                     try {
                         partySlot = Integer.parseInt(instructions[1]);
-                        if (partySlot < 1 || partySlot > 6) return partySlot + " is not a valid party slot.";
+                        if (partySlot < 1 || partySlot > 6) return partySlot + "";
                     } catch (NumberFormatException e) {
                         return instructions[1] + " is not a number.";
                     }
                     pokemon = playerParty.get(partySlot - 1);
-                    if (pokemon == null) return "No pokemon in that party slot.";
+                    if (pokemon == null) return "";
                     switch (instructions[2]) {
                         case "nickname":
                             String nickname = pokemon.getNickname();
